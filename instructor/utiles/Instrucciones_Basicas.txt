@@ -1,0 +1,5 @@
+- Registrarse en github https://github.com
+- Crear una carpeta para crear el repositorio
+- Abrir consola de comandos y ejecutar: 
+git clone https://github.com/ccastano/SemilleroHBTSegundaEdicion.git
+- localizarse en la carpeta clonada "SemilleroHBTSegundaEdicion"
