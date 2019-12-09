@@ -20,41 +20,34 @@ public interface IGestionarPersonajeLocal {
 
 	/**
 	 * @description Metodo encargado de crear un personaje y persistirlo
-	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
-	 * @param personajeNuevo informacion nueva a crear
+	 * @param personajeDTO informacion nueva a crear
 	 */
-	public void crearPersonaje(PersonajeDTO personajeNuevo);
-
+	public void crearPersonaje(PersonajeDTO personajeDTO);
 
 	/**
-	 * @description Metodo encargado de consultar un personaje modificarlo y guardarlo
-	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
-	 * @param personajeModificar informacion nueva a modificar
+	 * @description Metodo encargado de consultar un personaje, modificarlo y
+	 *              guardarlo
+	 * @param personajeDTO informacion nueva a modificar
 	 */
-	public void modificarPersonaje(Long id, String nombre, PersonajeDTO personajeModificar);
-
+	public void modificarPersonaje(Long id, String nombre, PersonajeDTO personajeDTO);
 
 	/**
-	 * @description Metodo encargado de eliminar un personaje modificarlo y guardarlo
-	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
+	 * @description Metodo encargado de eliminar un personaje
 	 * @param idPersonaje informacion a eliminar
 	 */
 	public void eliminarPersonaje(Long idPersonaje);
-	
-	
-	/**
-	 * @description Metodo encargado de retornar la informacion de un personaje
-	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
-	 * @param idPersonaje identificador del personaje a ser consultado
-	 * @return personaje Resultado de la consulta
-	 */
-	public PersonajeDTO consultarPersonaje(String idPersonaje);
 
-	
 	/**
-	 * @description Metodo encargado de retornar una lista de personajes	 * 
-	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
-	 * @return Personajes Lista de personajes
+	 * @description Metodo encargado de retornar una lista de personajes
+	 * @return List<PersonajeDTO> Lista de personajes
 	 */
 	public List<PersonajeDTO> consultarPersonajes();
+
+	/**
+	 * @description Metodo encargado de retornar una lista de personajes que
+	 *              pertenecen a un comic determinado
+	 * 
+	 * @return List<PersonajeDTO> Lista de personajes
+	 */
+	public List<PersonajeDTO> consultarPersonajes(Long idComic);
 }

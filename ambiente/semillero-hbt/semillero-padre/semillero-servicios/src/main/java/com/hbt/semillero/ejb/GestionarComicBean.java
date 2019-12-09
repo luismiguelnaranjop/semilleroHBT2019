@@ -106,6 +106,8 @@ public class GestionarComicBean implements IGestionarComicLocal {
 		for (Comic comic:resultados) {
 			resultadosComicDTO.add(convertirComicToComicDTO(comic));
 		}
+
+		logger.debug("Finaliza la ejecución del metodo consultar Comic");
 		return resultadosComicDTO;
 	}
 
