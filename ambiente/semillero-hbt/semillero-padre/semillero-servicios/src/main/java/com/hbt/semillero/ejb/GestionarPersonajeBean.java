@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.hbt.semillero.dto.PersonajeDTO;
 import com.hbt.semillero.entidad.Comic;
 import com.hbt.semillero.entidad.Personaje;
+import com.hbt.semillero.entidad.Rol;
 
 /**
  * Clase que determina el bean para realizar las gestion de los personajes
@@ -36,8 +37,10 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 	@Override
 	public void crearPersonaje(PersonajeDTO personajeDTO) {
 		// TODO Auto-generated method stub
-
+		logger.debug("___________________________________________________________________________________________________");
 		logger.debug("Inicio del metodo 'crearPersonaje'");
+		logger.debug("Data recibida: "+personajeDTO);
+		
 
 		Personaje personaje = convertirDTOEntidad(personajeDTO);
 		em.persist(personaje);
@@ -130,6 +133,8 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 		personaje.setNombre(personajeDTO.getNombre());
 		personaje.setComic(new Comic());
 		personaje.getComic().setId(personajeDTO.getIdComic());
+		personaje.setRol(new Rol());
+		personaje.getRol().setId(personajeDTO.getIdRol());;
 		personaje.setEstado(personajeDTO.getEstado());
 		personaje.setSuperPoder(personajeDTO.getSuperPoder());
 
@@ -149,6 +154,7 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 		personajeDTO.setId(personaje.getId());
 		personajeDTO.setNombre(personaje.getNombre());
 		personajeDTO.setIdComic(personaje.getComic().getId());
+		personajeDTO.setIdRol(personaje.getRol().getId());
 		personajeDTO.setEstado(personaje.getEstado());
 		personajeDTO.setSuperPoder(personaje.getSuperPoder());
 
