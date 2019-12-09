@@ -37,7 +37,6 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 	@Override
 	public void crearPersonaje(PersonajeDTO personajeDTO) {
 		// TODO Auto-generated method stub
-		logger.debug("___________________________________________________________________________________________________");
 		logger.debug("Inicio del metodo 'crearPersonaje'");
 		logger.debug("Data recibida: "+personajeDTO);
 		
