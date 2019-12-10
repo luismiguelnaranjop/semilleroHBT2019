@@ -1,0 +1,19 @@
+<hr>
+
+<button type="button" class="btn btn-success" (click)="eliminarObjeto(3)">Eliminar tercer objeto</button>
+
+<div *ngIf="mostarMensaje" class="alert">
+    <h2 class="text-success"> {{ mensaje }} </h2>
+</div>
+
+<div *ngIf="mensajeError" class="alert"> 
+    <h2 class="text-danger"> Ya el objeto de la posición 3 está eliminado </h2>
+</div>
+
+<div class="container">
+    <pre>
+        <code>
+            {{ listaJSON }}
+        </code>
+     </pre>
+</div>

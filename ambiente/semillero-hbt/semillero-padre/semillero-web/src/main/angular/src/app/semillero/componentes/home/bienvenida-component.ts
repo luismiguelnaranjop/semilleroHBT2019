@@ -23,6 +23,7 @@ export class BienvenidaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.urlImagen = "https://www.elempleo.com/sitios-empresariales/colombia/heinsohn-business-technology/img/elempleo-02.jpg";
     let data = this.activatedRoute.snapshot.params;
     
@@ -31,7 +32,6 @@ export class BienvenidaComponent implements OnInit {
     this.ejemploService.consultarComics().subscribe(respuesta => {
       console.log(respuesta);
     });
-
 
     this.comicDTO = new ComicDTO();    
     this.comicDTO.nombre = "BATAMAN";
@@ -45,18 +45,14 @@ export class BienvenidaComponent implements OnInit {
     this.comicDTO.tematica = "AVENTURAS"
     this.comicDTO.autores = "cindyDiego";
     this.comicDTO.color = true;
-
-    
+   
     this.ejemploService.crearComic(this.comicDTO).subscribe(respuesta => {
       console.log(respuesta);
     });
-
-   
   }
 
   public ejecucionEventoClick( parametroEvento : any, numero : number ) : void {
     alert("Hola: " + parametroEvento + ' ' + numero);
-    
   }
 
 }
