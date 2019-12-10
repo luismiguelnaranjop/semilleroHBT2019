@@ -12,15 +12,26 @@ import { Component, OnInit } from '@angular/core';
 export class NombreComponent implements OnInit {
 
     /**
-     * @description Variable que almacenará nombre completo y ciudad de origen.
+     * @description Variable que almacenará nombre completo
      */
-    public nombreCiudad: string;
+    public nombre: string;
 
+    /**
+     * @description Variable que almacenará ciudad de origen.
+     */
+    public ciudad: string;
+
+    /**
+     * @description Constructor que nos permite inyectar e inicializar las dependencias
+     */
     constructor() {
     }
 
+    /**
+     * @description Evento angular que se inicia para inicializar nuestras variables 
+     */
     ngOnInit(): void {
-        this.nombreCiudad = "Luis Miguel Naranjo Pastrana - Cienaga de Oro, Córdoba"
+        this.nombre = "Luis Miguel Naranjo Pastrana"
+        this.ciudad = "Cienaga de Oro, Córdoba"
     }
 }
-
