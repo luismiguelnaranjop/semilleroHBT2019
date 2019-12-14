@@ -12,20 +12,10 @@ import { Component, OnInit } from '@angular/core';
 export class ImprimirListaComponent implements OnInit {
 
     /**
-     * @description Variable privada que almacenará la lista de objetos
+     * @description Variable que almacenará la lista de objetos
      *  
-     * No es necesario que esta lista sea publica, puesto que en la vista
-     * se mostrará una variable con el resultados del JSON.stringify();
      */
-    private lista: Array<any>;
-
-
-    /**
-     * @description  Variable publica que será mostrada en el HTML, esta
-     * contendrá un JSON los objetos creados
-     */
-    public listaJSON: string;
-
+    public lista: Array<any>;
 
     /**
      * @description Si esta variable es TRUE, deberá mostrarse un mensaje
@@ -58,50 +48,52 @@ export class ImprimirListaComponent implements OnInit {
      */
     ngOnInit(): void {
 
-        //Instanciacion de la lista de objetos
+        //Inicializar la lista de objetos
         this.lista = new Array<any>();
 
-        //Instanciacion de la variable booleana
+        //Inicializar la variable que controla si se muestra o no un mensaje
         this.mostarMensaje = false;
 
-        //Instanciacion de la variable booleana
+        //Inicializar la variable que controla si se muestra o no un error
         this.mensajeError = false;
 
-        // Variable que controla el ciclo For
-        let i: number;
+        // Se guarda el objeto 1 en una variable temporal
+        let obj1 : string; 
+        obj1 = this.crearObjetoComic(1, "The Superior Spider-Man", "Panini Comics", "Acción", 144, 15.20, "Dan Slott, Giuseppe Camuncoli, Humberto Ramos", true, new Date("2019-12-12"), "Activo");
 
-        // Ciclo que llena automaticamente una lista con 5 objetos
-        for (i = 1; i <= 5; i++) {
-            this.lista.push(
-                this.crearObjeto(
-                    i,
-                    "Objeto " + i,
-                    "Editorial " + i,
-                    "Tematica " + i,
-                    i * 10,
-                    i * 5000 + 0.00,
-                    "Autor " + i,
-                    true,
-                    new Date("2019-12-0" + i),
-                    'Disponible'
-                )
-            )
-        }
+        // Se guarda el objeto 2 en una variable temporal
+        let obj2 : string; 
+        obj2 = this.crearObjetoComic(2, "Venom: Space Knight", "Panini Comics", "Acción", 160, 13.78, "Ariel Olivetti, Robbie Thompson", true, new Date("2017-03-03"), "Activo");
 
-        // Se convierte la lista de objetos en una cadena de texto JSON con un espacio en 
-        // blanco entre cada objeto en el String de salida JSON para su mejor legibilidad
-        this.listaJSON = JSON.stringify(this.lista, null, 1);
+        // Se guarda el objeto 3 en una variable temporal
+        let obj3 : string; 
+        obj3 = this.crearObjetoComic(3, "Daredevil v5", "Panini Comics", "Acción", 136, 11.88, "Charles Soule, Ron Garney", true, new Date("2019-04-10"), "Activo");
+
+        // Se guarda el objeto 4 en una variable temporal
+        let obj4 : string; 
+        obj4 = this.crearObjetoComic(4, "Captain America Corps", "Panini Comics", "Acción", 128, 12.83, "Phillippe Briones, Roger Stern", true, new Date("2019-03-32"), "Activo");
+
+        // Se guarda el objeto 5 en una variable temporal
+        let obj5 : string; 
+        obj5 = this.crearObjetoComic(5, "Conan The Barbarian", "Panini Comics", "Acción", 856, 47.45, "John Buscema, Neal Adams, Rich Buckler, Roy Thomas", true, new Date("2019-12-12"), "Activo");
+
+        // Se agregan a la lista los objetos creados pero ya convertidos en una cadena de texto JSON 
+        this.lista.push(JSON.stringify(obj1));
+        this.lista.push(JSON.stringify(obj2));
+        this.lista.push(JSON.stringify(obj3));
+        this.lista.push(JSON.stringify(obj4));
+        this.lista.push(JSON.stringify(obj5));
     }
 
     /**
-     * Metodo para crear objetos, recibe atributos del objeto por paramtro
+     * Metodo para crear un Comic, los atributos para crear el objeto se reciben por parametro
      * 
      * @param id numero entero
      * @param nombre alfanumerico
      * @param editorial alfanumerico
      * @param tematica alfanumerico
      * @param numeroPaginas numero entero 
-     * @param precio decimal
+     * @param precio decimal - valor en dolares
      * @param autores alfanumerico
      * @param aColor operador de desicion
      * @param fechaVenta decha
@@ -109,7 +101,7 @@ export class ImprimirListaComponent implements OnInit {
      * 
      * @returns Objeto
      */
-    private crearObjeto(id: number, nombre: string, editorial: string, tematica: string, numeroPaginas: number, precio: number, autores: string, aColor: boolean, fechaVenta: Date, estado: string): any {
+    private crearObjetoComic(id: number, nombre: string, editorial: string, tematica: string, numeroPaginas: number, precio: number, autores: string, aColor: boolean, fechaVenta: Date, estado: string): any {
         return {
             id: id,
             nombre: nombre,
@@ -125,23 +117,25 @@ export class ImprimirListaComponent implements OnInit {
     };
 
     /**
-     * Metodo que elimina un objeto de la lista 
+     * Metodo que elimina un objeto Comic JSON de la lista 
      * 
      * @param pos posicion a eliminar dentro de la lista
      */
-    public eliminarObjeto(pos:number) :void{
+    public eliminarObjetoComic(pos: number): void {
         if (this.mostarMensaje === false) {
 
-            // Aquí es donde se elimina. El elemento eliminado se guarda en la variable "eliminado"
-            let eliminado = this.lista.splice(pos-1, 1);
+            // Se elimina el objeto y este objeto eliminado se guarda en la variable "eliminadoJSON" cono string JSON
+            let eliminadoJSON = this.lista.splice(pos - 1, 1)[0];
 
+            // Se convierte el JSON string a un objeto, esto para poder acceder al nombre del comic eliminado
+            let eliminadoObject = JSON.parse(eliminadoJSON); 
+            
             // Establesemos el mensaje de error
-            this.mensaje = "Se ha eliminado el objeto: "+ eliminado[0].nombre;
-           
+            this.mensaje = "Se ha eliminado el comic: "+eliminadoObject.nombre;
+
             // Se confirma que se debe mostrar un mensaje de estado
             this.mostarMensaje = true;
         } else {
-
             // Se confirma que se debe mostrar un mensaje de estado error
             this.mensajeError = true;
         }
