@@ -3,6 +3,7 @@
  */
 package com.hbt.semillero.ejb;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import org.apache.log4j.Logger;
 
 import com.hbt.semillero.dto.ComicDTO;
 import com.hbt.semillero.entidad.Comic;
+import com.hbt.semillero.entidad.TematicaEnum;
+import com.hbt.semillero.interfaces.ICalcularPrecioIVA;
 
 /**
  * <b>Descripción:<b> Clase que determina el bean para realizar las gestion de
@@ -28,7 +31,7 @@ import com.hbt.semillero.entidad.Comic;
  */
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
-public class GestionarComicBean implements IGestionarComicLocal {
+public class GestionarComicBean implements IGestionarComicLocal, ICalcularPrecioIVA {
 	
 	final static Logger logger = Logger.getLogger(GestionarComicBean.class);
 
@@ -96,6 +99,7 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 * 
 	 * @see com.hbt.semillero.ejb.IGestionarComicLocal#consultarComics()
 	 */
+	@SuppressWarnings("unchecked")
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<ComicDTO> consultarComics() {
 		
@@ -119,10 +123,13 @@ public class GestionarComicBean implements IGestionarComicLocal {
 	 * @return
 	 */
 	private ComicDTO convertirComicToComicDTO(Comic comic) {
+
 		ComicDTO comicDTO = new ComicDTO();
+		
 		if(comic.getId()!=null) {
 		 comicDTO.setId(comic.getId().toString());
 		}
+		
 		comicDTO.setNombre(comic.getNombre());
 		comicDTO.setEditorial(comic.getEditorial());
 		comicDTO.setTematicaEnum(comic.getTematicaEnum());
@@ -134,8 +141,15 @@ public class GestionarComicBean implements IGestionarComicLocal {
 		comicDTO.setFechaVenta(comic.getFechaVenta());
 		comicDTO.setEstadoEnum(comic.getEstadoEnum());
 		comicDTO.setCantidad(comic.getCantidad());
+
+		// Le asignamos el porcentaje de IVA correspondiente
+		comic.setIva(PorcentajeIVA(comic.getTematicaEnum()));
+		
+		//	Calculo del precio total con IVA 
+		comicDTO.setPrecioTotal(CalcularPrecioTotal(comic.getIva(), comic.getPrecio()));
 		return comicDTO;
 	}
+
 
 	/**
 	 * 
@@ -162,4 +176,51 @@ public class GestionarComicBean implements IGestionarComicLocal {
 		comic.setCantidad(comicDTO.getCantidad());
 		return comic;
 	}
+
+
+	/**
+	 * Metodo que asigna un porcentaje de IVA a un comic dependiendo
+	 * la tematica de dicho comic
+	 * 
+	 * @param tematicaEnum
+	 * @return
+	 */
+	@Override
+	public double PorcentajeIVA(TematicaEnum tematica) {
+
+		switch (tematica) {
+			case AVENTURAS: 
+				return 0.05;
+			case BELICO: 
+				return  0.16;
+			case DEPORTIVO: 
+				return  0.10;
+			case FANTASTICO: 
+				return  0.05;
+			case CIENCIA_FICCION: 
+				return  0.16;
+			case HISTORICO: 
+				return  0.05;
+			case HORROR: 
+				return  0.16;
+			default:
+				return 0;
+		}
+	}
+	
+	/**
+	 * Metodo que calcula el precio total de un Comic
+	 * 
+	 * @param iva
+	 * @param precio base
+	 * @return
+	 */
+	@Override
+	public double CalcularPrecioTotal(double iva, BigDecimal precio) {
+		
+		double precioBase = precio.doubleValue();
+		return  precioBase + precioBase*iva;
+		
+	}
+
 }

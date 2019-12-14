@@ -32,6 +32,7 @@ public class ComicDTO implements Serializable {
 	private LocalDate fechaVenta;
 	private EstadoEnum estadoEnum;
 	private Long cantidad;
+	private double precioTotal;
 
 	/**
 	 * Metodo encargado de retornar el valor del atributo id
@@ -248,6 +249,28 @@ public class ComicDTO implements Serializable {
 	public void setCantidad(Long cantidad) {
 		this.cantidad = cantidad;
 	}
+	
+	
+	/**
+	 * @return the precioTotal
+	 */
+	public double getPrecioTotal() {
+		return precioTotal;
+	}
+
+	/**
+	 * @param precioTotal the precioTotal to set
+	 */
+	public void setPrecioTotal(double precioTotal) {
+		this.precioTotal = precioTotal;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	/**
 	 * Método encargado de convertir los datos recibidos en JSON al tipo ComicDTO.
@@ -273,17 +296,6 @@ public class ComicDTO implements Serializable {
 		return JsonUtils.toStringJson(this);
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
-		return result;
-	}
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)

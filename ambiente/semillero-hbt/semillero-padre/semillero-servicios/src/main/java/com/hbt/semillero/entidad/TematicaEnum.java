@@ -12,13 +12,13 @@ package com.hbt.semillero.entidad;
  */
 public enum TematicaEnum {
 
-	AVENTURAS("enum.tematica.aventuras"), 
-	BELICO("enum.tematica.belico"),
-	DEPORTIVO("enum.tematica.deportivo"), 
-	FANTASTICO("enum.tematica.fantastico"),  
-	CIENCIA_FICCION("enum.tematica.cienciaficcion"),  
-	HISTORICO("enum.tematica.historico"),  
-	HORROR("enum.tematica.horror");
+	AVENTURAS("enum.tematica.aventuras"), 				// Iva del 5%
+	BELICO("enum.tematica.belico"),						// Iva del 16%
+	DEPORTIVO("enum.tematica.deportivo"), 				// Iva del 10%
+	FANTASTICO("enum.tematica.fantastico"),  			// Iva del 5%
+	CIENCIA_FICCION("enum.tematica.cienciaficcion"),  	// Iva del 16%
+	HISTORICO("enum.tematica.historico"),  				// Iva del 5%
+	HORROR("enum.tematica.horror");						// Iva del 165%
 	
 	/**
 	 * Atributo que contiene la clave del mensaje para la internacionalizacion

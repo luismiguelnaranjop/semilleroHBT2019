@@ -16,12 +16,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * <b>Descripción:<b> Clase que determina la entidad que permite representar la
  * tabla "DB_SEMILLERO"."COMIC"
  * 
- * @author Luismigeek
+ * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
  * @version
  */
 @Entity
@@ -47,6 +48,11 @@ public class Comic implements Serializable {
 	private LocalDate fechaVenta;
 	private EstadoEnum estadoEnum;
 	private Long cantidad;
+	
+	@Transient
+	private double iva;	
+	@Transient
+	private double precioTotal;
 
 	/**
 	 * Constructor de la clase.
@@ -279,6 +285,7 @@ public class Comic implements Serializable {
 		return cantidad;
 	}
 
+	
 	/**
 	 * Metodo encargado de modificar el valor del atributo cantidad
 	 * 
@@ -286,6 +293,47 @@ public class Comic implements Serializable {
 	 */
 	public void setCantidad(Long cantidad) {
 		this.cantidad = cantidad;
+	}
+	
+	
+	/**
+	 * Metodo encargado de retornar el valor del atributo iva
+	 * 
+	 * @return the iva
+	 */
+	@Transient
+	public double getIva() {
+		return iva;
+	}
+
+	
+	/**
+	 * Metodo encargado de modificar el valor del atributo iva
+	 * @param iva the iva to set
+	 */
+	@Transient
+	public void setIva(double iva) {
+		this.iva = iva;
+	}
+
+	
+	/**
+	 * Metodo encargado de retornar el valor del atributo preciototal
+	 * 
+	 * @return the precioTotal
+	 */
+	@Transient
+	public double getPrecioTotal() {
+		return precioTotal;
+	}
+
+	/**
+	 * Metodo encargado de modificar el valor del atributo precioTotal
+	 * @param precioTotal the precioTotal to set
+	 */
+	@Transient
+	public void setPrecioTotal(double precioTotal) {
+		this.precioTotal = precioTotal;
 	}
 
 	/**
