@@ -1,18 +1,12 @@
 <div class="container">
-    <form [formGroup]="gestionarComicForm">
-        <h1>Gestionar Comic</h1>
+    <form [formGroup]="consultarComicForm">
+        <h1>Consultar Comic</h1>
         <hr>
-
-        <input type="hidden" id="idComic" formControlName="id">
 
         <div class="row">
             <div class="col-6">
                 <label for="nombreComic">Nombre:</label>
-                <input type="text" class="form-control" id="nombreComic" formControlName="nombre"
-                    [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" maxlength="50">
-                <div *ngIf="submitted && f.nombre.errors">
-                    <span class="text-danger" *ngIf="f.nombre.errors.required">Campo requerido.</span>
-                </div>
+                <input type="text" class="form-control" id="nombreComic" formControlName="nombre">
             </div>
 
             <div class="col-6">
@@ -64,64 +58,26 @@
                 <label for="color">A color:</label>
                 <br>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline1" class="custom-control-input" formControlName="color"
-                        [value]="true">
+                    <input type="radio" id="customRadioInline1" class="custom-control-input"
+                        formControlName="color" [value]="true">
                     <label class="custom-control-label" for="customRadioInline1">Si</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline2" class="custom-control-input" formControlName="color"
-                        [value]="false">
+                    <input type="radio" id="customRadioInline2"  class="custom-control-input"
+                        formControlName="color" [value]="false">
                     <label class="custom-control-label" for="customRadioInline2">No</label>
                 </div>
             </div>
         </div>
         <br>
+
         <div class="row">
             <div class="col-6">
                 <span></span>
             </div>
             <div class="col-6 text-right">
-                <button type="button" class="btn btn-primary" *ngIf="showCreateBtn" (click)="CreateComic()">Registrar
-                    comic</button>
-                <button type="button" class="btn btn-warning" *ngIf="showUpdateBtn" (click)="UpdateComic()">Guardar
-                    cambios</button>
-            </div>
-        </div>
-
-        <br>
-
-        <div class="row" [hidden]="listaComics.length === 0">
-            <div class="col-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Tematica</th>
-                            <th scope="col">Precio</th>
-                            <th scope="col">A color</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!--date:"MM/dd/yy"
-                        | uppercase-->
-                        <tr *ngFor="let comic of listaComics;let i=index;">
-                            <th scope="row">{{comic.id}}</th>
-                            <td>{{comic.nombre | uppercase }}</td>
-                            <td>{{comic.tematica | lowercase }}</td>
-                            <td>{{comic.precio | number: '.2'}}</td>
-                            <td>{{comic.color ? 'Si' : 'No' }}</td>
-                            <td>
-                                <i class="fas fa-search 2x ml-1" (click)="ReadComic(comic)" title="Consultar"></i>
-                                <i class="fas fa-pencil-alt 2x ml-1" (click)="EditComic(i)" title="Editar"></i>
-                                <i class="far fa-times-circle 2x ml-1" (click)="DeleteComic(i)" title="Eliminar"></i>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <button type="button" class="btn btn-primary" [routerLink]="['/gestionar-comic']">Cancelar</button>
             </div>
         </div>
     </form>
-
 </div>

@@ -13,9 +13,14 @@ import { BienvenidaComponent } from './semillero/componentes/home/bienvenida-com
 import { CrearPersonaComponent } from './semillero/componentes/crearPersona/crear-persona-component';
 import { GestionarComicComponent } from './semillero/componentes/gestionarComic/gestionar-comic';
 
+// Modulos para el Toastr (Notificaciones)
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
+// Componentes creados durante el desarrollo del Semillero
 import { NombreComponent } from './semillero/componentes/imprimirNombre/imprimir-nombre-component';
 import { ImprimirListaComponent } from './semillero/componentes/imprimirLista/imprimir-lista-component';
+import { ConsultarComicComponent } from './semillero/componentes/consultarComic/consultar-comic';
 
 // DTOs
 export { ComicDTO } from './semillero/dto/comic.dto';
@@ -34,7 +39,8 @@ import {AbstractService} from './semillero/services/template.service';
     CrearPersonaComponent,
     GestionarComicComponent,
     NombreComponent,
-    ImprimirListaComponent
+    ImprimirListaComponent,
+    ConsultarComicComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +48,9 @@ import {AbstractService} from './semillero/services/template.service';
     HttpModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot() // ToastrModule added
   ],
   providers: [
   	{ provide: APP_BASE_HREF, useValue: '/SemilleroHBT' }
