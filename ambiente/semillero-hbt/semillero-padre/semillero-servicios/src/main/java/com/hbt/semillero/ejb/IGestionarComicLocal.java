@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Local;
 
 import com.hbt.semillero.dto.ComicDTO;
+import com.hbt.semillero.exceptions.ComicException;
 
 /**
  * Expone los métodos del EJB GestionarComic Las interfaces determinan una
@@ -22,47 +23,55 @@ public interface IGestionarComicLocal {
 	 * 
 	 * Metodo encargado de crear un comic y persistirlo
 	 * 
-	 * @author ccastano
+	 * @param nuevoComicDTO
+	 * @throws ComicException
 	 * 
-	 * @param comicNuevo informacion nueva a crear
+	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
 	 */
-	public void crearComic(ComicDTO comicNuevo);
+	public void crearComic(ComicDTO nuevoComicDTO) throws ComicException;
+
 
 	/**
 	 * 
-	 * Metodo encargado de consultar un comic modificarlo y guardarlo
+	 * Metodo encargado de consultar un comic por ID y actualizar su nombre
+	 *  
+	 * @param id
+	 * @param comicDTO
+	 * @throws ComicException
 	 * 
-	 * @author ccastano
-	 * 
-	 * @param comicModificar informacion nueva a modificar
+	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
 	 */
-	public void modificarComic(Long id, String nombre, ComicDTO comicNuevo);
+	public void modificarComic(Long id, String nombre, ComicDTO comicDTO) throws ComicException;
 
 	/**
-	 * 
 	 * Metodo encargado de eliminar un comic modificarlo y guardarlo
 	 * 
-	 * @author ccastano
+	 * @param idComic
+	 * @throws ComicException
 	 * 
-	 * @param comicEliminar informacion a eliminar
+	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
 	 */
-	public void eliminarComic(Long idComic);
-
-	/**
-	 * 
-	 * Metodo encargado de retornar la informacion de un comic
-	 * 
-	 * @param idComic identificador del comic a ser consultado
-	 * @return comic Resultado de la consulta
-	 * @throws Exception si no se recibe idComic
-	 */
-	public ComicDTO consultarComic(String idComic);
+	public void eliminarComic(Long idComic) throws ComicException;
 
 	/**
 	 * 
 	 * Metodo encargado de retornar una lista de comics
 	 * 
 	 * @return
+	 * @throws ComicException 
 	 */
-	public List<ComicDTO> consultarComics();
+	public List<ComicDTO> consultarComics() throws ComicException;
+	
+	/**
+	 * 
+	 * Metodo encargado de retornar la informacion de un comic
+	 * 	 
+	 * @param idComic
+	 * @return ComicDTO
+	 * @throws ComicException
+	 * 
+	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
+	 */
+	public ComicDTO consultarComic(Long idComic) throws ComicException;
+
 }

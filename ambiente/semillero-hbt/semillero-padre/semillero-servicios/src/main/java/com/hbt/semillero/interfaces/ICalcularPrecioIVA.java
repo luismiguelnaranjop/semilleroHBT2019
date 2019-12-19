@@ -17,7 +17,7 @@ public interface ICalcularPrecioIVA {
 	 * @param precio precio base del comic
 	 * @return
 	 */
-	public double CalcularPrecioTotal(double iva, BigDecimal precio);
+	public BigDecimal CalcularPrecioTotal(double iva, BigDecimal precio);
 	
 
 	/**

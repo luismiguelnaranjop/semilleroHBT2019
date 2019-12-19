@@ -3,6 +3,7 @@
  */
 package com.hbt.semillero.ejb;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.hbt.semillero.dto.PersonajeDTO;
 import com.hbt.semillero.entidad.Comic;
 import com.hbt.semillero.entidad.Personaje;
 import com.hbt.semillero.entidad.Rol;
+import com.hbt.semillero.exceptions.ComicException;
 
 /**
  * Clase que determina el bean para realizar las gestion de los personajes
@@ -36,31 +38,41 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 
 	@Override
 	public void crearPersonaje(PersonajeDTO personajeDTO) {
-		// TODO Auto-generated method stub
 		logger.debug("Inicio del metodo 'crearPersonaje'");
-		logger.debug("Data recibida: "+personajeDTO);
-		
 
-		Personaje personaje = convertirDTOEntidad(personajeDTO);
-		em.persist(personaje);
+		try {
+			Personaje personaje = convertirDTOEntidad(personajeDTO);
+			em.persist(personaje);
+			logger.info("Personaje creado correctamente");
+		} catch (Exception e) {
+			logger.error("Se ha producido en error al crear personaje: "+e.getMessage());
+		}
 
 		logger.debug("Fin del metodo 'crearPersonaje'");
 	}
 
 	@Override
 	public void modificarPersonaje(Long id, String nombre, PersonajeDTO personajeModificar) {
-		// TODO Auto-generated method stub
-
 		logger.debug("Inicio del metodo 'modificarPersonaje'");
+		
+		try {	
+			// TODO: Implementar			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
 		logger.debug("Fin del metodo 'modificarPersonaje'");
 	}
 
 	@Override
 	public void eliminarPersonaje(Long idPersonaje) {
-		// TODO Auto-generated method stub
-
 		logger.debug("Inicio del metodo 'eliminarPersonaje'");
+		
+		try {	
+			// TODO: Implementar			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
 		logger.debug("Fin del metodo 'eliminarPersonaje'");
 	}
@@ -68,22 +80,66 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PersonajeDTO> consultarPersonajes() {
-		// TODO Auto-generated method stub
-
 		logger.debug("Inicio del metodo 'consultarPersonajes' ");
-
-		// Consulta todos los personajes en la Tabla Personaje
-		String qlString = "SELECT personaje FROM Personaje personaje";
-
-		// listapersonajes almacena todos los personaje obtenido en la consulta
-		List<Personaje> listaPersonajes = em.createQuery(qlString).getResultList();
 
 		// En listpersonajesDTO se almacenarán todos los elementos de listapersonajes
 		// pero en DTO
 		List<PersonajeDTO> listaPersonajesDTO = new ArrayList<>();
 
-		for (Personaje personaje : listaPersonajes) {
-			listaPersonajesDTO.add(convertirDTOEntidad(personaje));
+		List<Personaje> listaPersonajes = null;
+		
+		try {
+			// Consulta todos los personajes en la Tabla Personaje
+			String qlString = "SELECT p FROM Personaje p";
+
+			// listapersonajes almacena todos los personaje obtenido en la consulta
+			listaPersonajes = em.createQuery(qlString).getResultList();
+
+			for (Personaje personaje : listaPersonajes) {
+				listaPersonajesDTO.add(convertirDTOEntidad(personaje));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception			
+		}
+		
+		logger.debug("Fin del metodo 'consultarPersonajes' ");
+		return listaPersonajesDTO;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PersonajeDTO> consultarPersonajes(int index, String cadena) {
+		logger.debug("Inicio del metodo 'consultarPersonajes' ");
+		
+		// En listpersonajesDTO se almacenarán todos los elementos de listapersonajes
+		// pero en DTO
+		List<PersonajeDTO> listaPersonajesDTO = new ArrayList<>();
+
+		try {
+			// Consulta todos los personajes en la Tabla Personaje
+			String qlString = "SELECT personaje FROM Personaje personaje";
+
+			// listapersonajes almacena todos los personaje obtenido en la consulta
+			List<Personaje> listaPersonajes = em.createQuery(qlString).getResultList();
+
+			for (Personaje personaje : listaPersonajes) {
+				listaPersonajesDTO.add(convertirDTOEntidad(personaje));
+			}
+			
+			PersonajeDTO personajeDTO = listaPersonajesDTO.get(index);
+			Long valorCadena = Long.parseLong(cadena);
+			
+			BigDecimal bigUno = new BigDecimal("10");
+			BigDecimal bigDos = BigDecimal.ZERO;
+			BigDecimal bigTotal = bigUno.divide(bigDos);
+			
+
+		} catch (IndexOutOfBoundsException e) {
+			logger.error("Indice por fuera del limite");
+		} catch (NumberFormatException e) {
+			logger.error("Error al convertir a numero la cadena de texto");			
+		} catch (ArithmeticException e) {
+			logger.error("Error Divición por cero");			
 		}
 
 		logger.debug("Fin del metodo 'consultarPersonajes' ");
@@ -93,8 +149,6 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PersonajeDTO> consultarPersonajes(Long idComic) {
-		// TODO Auto-generated method stub
-
 		logger.debug("Inicio del metodo 'consultarPersonajes?idComic' ");
 
 		/**

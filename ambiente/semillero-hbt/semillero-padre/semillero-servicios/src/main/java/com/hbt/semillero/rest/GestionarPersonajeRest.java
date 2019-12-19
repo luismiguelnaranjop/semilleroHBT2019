@@ -14,8 +14,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
 import com.hbt.semillero.dto.PersonajeDTO;
 import com.hbt.semillero.dto.ResultadoDTO;
+import com.hbt.semillero.ejb.GestionarComicBean;
 import com.hbt.semillero.ejb.IGestionarPersonajeLocal;
 
 /**
@@ -27,6 +30,8 @@ import com.hbt.semillero.ejb.IGestionarPersonajeLocal;
 
 @Path("/GestionarPersonaje")
 public class GestionarPersonajeRest {
+
+	final static Logger logger = Logger.getLogger(GestionarPersonajeRest.class);
 
 	/**
 	 * Atriburo que permite gestionar un personaje
@@ -50,22 +55,28 @@ public class GestionarPersonajeRest {
 	
 	/**
 	 * Crea personajes
-	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/crear
+	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/crearPersonaje
 	 * 
 	 * @param personajeDTO
 	 * @return
 	 */
 	@POST
-	@Path("/crear")
+	@Path("/crearPersonaje")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public ResultadoDTO crearPersonaje(PersonajeDTO personajeDTO) {
-		gestionarPersonajeEJB.crearPersonaje(personajeDTO);
-		ResultadoDTO resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Personaje creado exitosamente");
-		return resultadoDTO;
+		
+		ResultadoDTO resultadoDTO = null;
+		try {
+			gestionarPersonajeEJB.crearPersonaje(personajeDTO);
+			resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Personaje creado exitosamente");
+		} catch (Exception e) {
+			logger.error("Se ha producido un error al crear personaje: "+e.getMessage());
+		}
+		return resultadoDTO;			
 	}
 	
-	
+
 	/**
 	 * 
 	 * Metodo encargado de traer todos los personajes
@@ -77,7 +88,15 @@ public class GestionarPersonajeRest {
 	@Path("/consultarPersonajes")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PersonajeDTO> consultarPersonajes() {
-		return gestionarPersonajeEJB.consultarPersonajes();
+
+		List<PersonajeDTO> listPersonajeDTO = null;
+		try {
+			listPersonajeDTO =  gestionarPersonajeEJB.consultarPersonajes();
+		} catch (Exception e) {
+			logger.error("Se ha producido un error al consultar personajes: "+e.getMessage());
+		}
+
+		return listPersonajeDTO;
 	}
 
 	/**
@@ -92,9 +111,31 @@ public class GestionarPersonajeRest {
 	@Path("/consultarPersonajesPorId")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PersonajeDTO> consultarPersonajes(@QueryParam("idComic") Long idComic){
-		if (idComic != null) {
-			return gestionarPersonajeEJB.consultarPersonajes(idComic);
+		
+		List<PersonajeDTO> listPersonajeDTO = null;
+		try {
+			if (idComic != null) {
+				listPersonajeDTO = gestionarPersonajeEJB.consultarPersonajes(idComic);
+			}
+		} catch (Exception e) {
+			logger.error("Se ha producido un error al consultar personajes: "+e.getMessage());
 		}
-		return null;		
+		return listPersonajeDTO;
+		
 	}
+	
+	/**
+	 * 
+	 * Metodo para hacer pruebas de excepciones
+	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/consultarPersonajes?index=100&cadena=jgjhgj
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/consultarPersonajesPorParametros")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<PersonajeDTO> consultarPersonajes(@QueryParam("index") int index, @QueryParam("cadena") String cadena) {
+		return gestionarPersonajeEJB.consultarPersonajes(index, cadena);
+	}
+
 }

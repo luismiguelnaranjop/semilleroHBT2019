@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.ejb.Local;
 
-import com.hbt.semillero.dto.PersonajeDTO;;
+import com.hbt.semillero.dto.PersonajeDTO;
+import com.hbt.semillero.dto.ResultadoDTO;;
 
 /**
  * Expone los métodos del EJB GestionarPersonaje Las interfaces determinan una
@@ -21,6 +22,7 @@ public interface IGestionarPersonajeLocal {
 	/**
 	 * @description Metodo encargado de crear un personaje y persistirlo
 	 * @param personajeDTO informacion nueva a crear
+	 * @return 
 	 */
 	public void crearPersonaje(PersonajeDTO personajeDTO);
 
@@ -50,4 +52,11 @@ public interface IGestionarPersonajeLocal {
 	 * @return List<PersonajeDTO> Lista de personajes
 	 */
 	public List<PersonajeDTO> consultarPersonajes(Long idComic);
+
+	/**
+	 * @description Metodo para hacer pruebas de excepciones
+	 * 
+	 * @return List<PersonajeDTO> Lista de personajes
+	 */
+	public List<PersonajeDTO> consultarPersonajes(int index, String cadena);
 }
