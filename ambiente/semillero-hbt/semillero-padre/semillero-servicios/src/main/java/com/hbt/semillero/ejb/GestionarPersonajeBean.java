@@ -10,9 +10,11 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
+import com.hbt.semillero.dto.ConsultarTotalPersonajesPorComicDTO;
 import com.hbt.semillero.dto.PersonajeDTO;
 import com.hbt.semillero.entidad.Comic;
 import com.hbt.semillero.entidad.Personaje;
@@ -37,7 +39,7 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 	private EntityManager em;
 
 	@Override
-	public void crearPersonaje(PersonajeDTO personajeDTO) {
+	public PersonajeDTO crearPersonaje(PersonajeDTO personajeDTO) {
 		logger.debug("Inicio del metodo 'crearPersonaje'");
 
 		try {
@@ -45,23 +47,33 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 			em.persist(personaje);
 			logger.info("Personaje creado correctamente");
 		} catch (Exception e) {
-			logger.error("Se ha producido en error al crear personaje: "+e.getMessage());
+			logger.error("Se ha producido en error al crear personaje: "+e);
 		}
 
-		logger.debug("Fin del metodo 'crearPersonaje'");
+		logger.debug("Fin del metodo 'crearPersonaje'");		
+		return personajeDTO;
 	}
 
 	@Override
-	public void modificarPersonaje(Long id, String nombre, PersonajeDTO personajeModificar) {
+	public PersonajeDTO modificarPersonaje(PersonajeDTO personajeModificar) throws ComicException {
 		logger.debug("Inicio del metodo 'modificarPersonaje'");
 		
-		try {	
-			// TODO: Implementar			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		logger.debug("Fin del metodo 'modificarPersonaje'");
+			if (personajeModificar.getId() == null) {
+				throw new ComicException("COD-0011", "El id del objeto es requerido");
+			}
+			
+			Query query = em.createQuery("UPDATE Personaje personaje "
+					+ "SET personaje.estado = :estado, "
+					+ "personaje.comic.id = :idComic "
+					+ "WHERE personaje.id = :idPersonaje");
+			
+			query.setParameter("estado", personajeModificar.getEstado());
+			query.setParameter("idComic", personajeModificar.getIdComic());
+			query.setParameter("idPersonaje", personajeModificar.getId());
+			query.executeUpdate();
+			
+			logger.debug("Fin del metodo 'modificarPersonaje'");
+			return convertirDTOEntidad(em.find(Personaje.class, personajeModificar.getId()));			
 	}
 
 	@Override
@@ -171,7 +183,37 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 		logger.debug("Fin del metodo 'consultarPersonajes?idComic' ");
 		return listaPersonajesDTO;
 	}
-
+	
+	/**
+	 * JOIN: Es una consulta que combina resultados de distintas entidades
+	 * INNER JOIN: Devuelve todas las entidades del lado izquierdo que tienen una
+	 * relacion con la entidad del lado derecho de la relación
+	 * 
+	 * Se define de forma explicita así:
+	 * [SELECT EntidadA ea JOIN ea.EntidadB EB]
+	 * 
+	 *  Su traducción a SQL será:
+	 *  [SELECT EA.* FROM EntidadA EA, EntidadB EB WHERE EA.id = EB.id]
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ConsultarTotalPersonajesPorComicDTO> ConsultarTotalPersonajesPorComicDTO()
+			throws ComicException {
+		
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT new com.hbt.semillero.dto.ConsultarTotalPersonajesPorComicDTO(COUNT(p.id), c.nombre) ");
+			sb.append("FROM Personaje p ");
+			sb.append("JOIN p.comic c ");
+			sb.append("GROUP BY c.nombre");	
+			
+			return em.createQuery(sb.toString()).getResultList();
+		} catch (Exception e) {
+			throw new ComicException("COD-0013", "Error en la consulta de los totales: ", e);
+		}
+	}
+	
+	
 	/**
 	 * 
 	 * Metodo encargado de transformar un PersonajeDTO a una entidad personaje
@@ -213,4 +255,7 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 
 		return personajeDTO;
 	}
+
+
+
 }

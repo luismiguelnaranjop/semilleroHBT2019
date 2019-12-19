@@ -13,13 +13,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
+import com.hbt.semillero.dto.ConsultarTotalPersonajesPorComicDTO;
 import com.hbt.semillero.dto.PersonajeDTO;
 import com.hbt.semillero.dto.ResultadoDTO;
 import com.hbt.semillero.ejb.GestionarComicBean;
 import com.hbt.semillero.ejb.IGestionarPersonajeLocal;
+import com.hbt.semillero.exceptions.ComicException;
 
 /**
  * @descripcion Clase que determina el servicio rest que permite gestionar un personaje
@@ -64,16 +67,46 @@ public class GestionarPersonajeRest {
 	@Path("/crearPersonaje")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public ResultadoDTO crearPersonaje(PersonajeDTO personajeDTO) {
+	public Response crearPersonaje(PersonajeDTO personajeDTO) {
 		
-		ResultadoDTO resultadoDTO = null;
 		try {
 			gestionarPersonajeEJB.crearPersonaje(personajeDTO);
-			resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Personaje creado exitosamente");
+			return Response.status(Response.Status.CREATED)
+					.entity(personajeDTO)
+					.build();			
 		} catch (Exception e) {
-			logger.error("Se ha producido un error al crear personaje: "+e.getMessage());
+			logger.error("Se ha producido un error al crear personaje: "+e);
+			return Response.status(Response.Status.BAD_REQUEST)
+					.entity(e)
+					.build();
 		}
-		return resultadoDTO;			
+	}
+	
+
+	/**
+	 * Crea personajes
+	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/modificarPersonaje
+	 * 
+	 * @param personajeDTO
+	 * @return
+	 */
+	@POST
+	@Path("/modificarPersonaje")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response modificarPersonaje(PersonajeDTO personajeDTO) {
+		
+		try {
+			gestionarPersonajeEJB.modificarPersonaje(personajeDTO);
+			return Response.status(Response.Status.OK)
+					.entity(personajeDTO)
+					.build();			
+		} catch (ComicException e) {
+			logger.error("Se ha producido un error al modificar personaje: "+e.getMensaje());
+			return Response.status(Response.Status.BAD_REQUEST)
+					.entity(e)
+					.build();
+		}
 	}
 	
 
@@ -136,6 +169,32 @@ public class GestionarPersonajeRest {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PersonajeDTO> consultarPersonajes(@QueryParam("index") int index, @QueryParam("cadena") String cadena) {
 		return gestionarPersonajeEJB.consultarPersonajes(index, cadena);
+	}
+
+	/**
+	 * 
+	 * Metodo que permite consultar el total de personajes por Comic
+	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/consultarTotalPersonajesPorComic
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/consultarTotalPersonajesPorComic")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response ConsultarTotalPersonajesPorComicDTO() {
+
+		try {
+			List<ConsultarTotalPersonajesPorComicDTO> listTotales = gestionarPersonajeEJB
+					.ConsultarTotalPersonajesPorComicDTO();
+			return Response.status(Response.Status.OK)
+					.entity(listTotales)
+					.build();
+		} catch (ComicException e) {
+			return Response.status(Response.Status.BAD_REQUEST)
+					.entity(e)
+					.build();
+		}
+
 	}
 
 }

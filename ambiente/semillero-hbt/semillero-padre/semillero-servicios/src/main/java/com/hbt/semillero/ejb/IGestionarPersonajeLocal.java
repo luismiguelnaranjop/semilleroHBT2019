@@ -4,8 +4,9 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import com.hbt.semillero.dto.ConsultarTotalPersonajesPorComicDTO;
 import com.hbt.semillero.dto.PersonajeDTO;
-import com.hbt.semillero.dto.ResultadoDTO;;
+import com.hbt.semillero.exceptions.ComicException;;
 
 /**
  * Expone los métodos del EJB GestionarPersonaje Las interfaces determinan una
@@ -24,14 +25,16 @@ public interface IGestionarPersonajeLocal {
 	 * @param personajeDTO informacion nueva a crear
 	 * @return 
 	 */
-	public void crearPersonaje(PersonajeDTO personajeDTO);
+	public PersonajeDTO crearPersonaje(PersonajeDTO personajeDTO);
 
 	/**
 	 * @description Metodo encargado de consultar un personaje, modificarlo y
 	 *              guardarlo
 	 * @param personajeDTO informacion nueva a modificar
+	 * @return 
+	 * @throws ComicException 
 	 */
-	public void modificarPersonaje(Long id, String nombre, PersonajeDTO personajeDTO);
+	public PersonajeDTO modificarPersonaje(PersonajeDTO personajeDTO) throws ComicException;
 
 	/**
 	 * @description Metodo encargado de eliminar un personaje
@@ -56,7 +59,16 @@ public interface IGestionarPersonajeLocal {
 	/**
 	 * @description Metodo para hacer pruebas de excepciones
 	 * 
+	 * @return Lista de comics con su respectiva cantidad de personajes
+	 * @throws ComicException
+	 */
+	public List<ConsultarTotalPersonajesPorComicDTO> ConsultarTotalPersonajesPorComicDTO() throws ComicException;
+	
+	/**
+	 * @description Metodo para hacer pruebas de excepciones
+	 * 
 	 * @return List<PersonajeDTO> Lista de personajes
 	 */
 	public List<PersonajeDTO> consultarPersonajes(int index, String cadena);
+
 }

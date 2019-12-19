@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
@@ -31,7 +32,7 @@ import com.hbt.semillero.exceptions.ComicException;
 @Path("/GestionarComic")
 public class GestionarComicRest {
 	
-	final static Logger logger = Logger.getLogger(GestionarComicBean.class);
+	final static Logger logger = Logger.getLogger(GestionarComicRest.class);
 
 
 	/**
@@ -50,34 +51,48 @@ public class GestionarComicRest {
 	@GET
 	@Path("/saludo")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String primerRest() {
-		return "Prueba inicial servicios rest en el semillero java hbt";
+	public Response primerRest() {
+		logger.debug("Log enviado con la librería logger");	
+		String saludo = "Prueba inicial servicios rest en el semillero java hbt";
+//		return Response.ok().entity(saludo).build();	
+		return Response.status(Response.Status.OK)
+				.entity(saludo)
+				.type(MediaType.APPLICATION_JSON)
+				.build();
 	}
 
 
 	/**
 	 * Crea comics.
 	 * http://localhost:8085/semillero-servicios/rest/GestionarComic/crearComic
-	 * @param persona
+	 * @param comicDTO
 	 * @return
 	 */
 	@POST
 	@Path("/crearComic")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public ResultadoDTO crearComic(ComicDTO comicDTO) {
+	public Response crearComic(ComicDTO comicDTO) {
 
 		ResultadoDTO resultadoDTO = null;
 		
 		try {
+
 			gestionarComicEJB.crearComic(comicDTO);
 			resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Comic creado exitosamente");
+
+			return Response.status(Response.Status.CREATED)
+					.entity(resultadoDTO)
+					.build();
+
 		} catch (ComicException e) {
-			resultadoDTO = new ResultadoDTO(Boolean.FALSE, "No se pudo crear el comic");
 			logger.error("Se ha capturado una excepcion al crear un comic. CODIGO: "+e.getCodigo()+". INFO: "+e.getMessage());
+			
+			return Response.status(Response.Status.BAD_REQUEST)
+					.entity("Se presentó un fallo en la invocación del servicio")
+					.build();
 		}
 	
-		return resultadoDTO;		
 	}
 
 	/**
