@@ -30,13 +30,19 @@ import com.hbt.semillero.exceptions.ComicException;
 @Stateless
 public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 
-	final static Logger logger = Logger.getLogger(GestionarComicBean.class);
+
+	final static Logger logger = Logger.getLogger(GestionarPersonajeBean.class);
 
 	/**
 	 * Atributo em que se usa para interacturar con el contexto de persistencia.
 	 */
 	@PersistenceContext
 	private EntityManager em;
+
+
+	/*************************************************************************************************/
+	/* METODOS PARA HACER CRUD */
+	/*************************************************************************************************/
 
 	@Override
 	public PersonajeDTO crearPersonaje(PersonajeDTO personajeDTO) {
@@ -47,10 +53,10 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 			em.persist(personaje);
 			logger.info("Personaje creado correctamente");
 		} catch (Exception e) {
-			logger.error("Se ha producido en error al crear personaje: "+e);
+			logger.error("Se ha producido en error al crear personaje: " + e);
 		}
 
-		logger.debug("Fin del metodo 'crearPersonaje'");		
+		logger.debug("Fin del metodo 'crearPersonaje'");
 		return personajeDTO;
 	}
 
@@ -58,6 +64,8 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 	public PersonajeDTO modificarPersonaje(PersonajeDTO personajeModificar) throws ComicException {
 		logger.debug("Inicio del metodo 'modificarPersonaje'");
 		
+		try {
+			
 			if (personajeModificar.getId() == null) {
 				throw new ComicException("COD-0011", "El id del objeto es requerido");
 			}
@@ -74,49 +82,123 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 			
 			logger.debug("Fin del metodo 'modificarPersonaje'");
 			return convertirDTOEntidad(em.find(Personaje.class, personajeModificar.getId()));			
+		} catch (Exception e) {
+			logger.error("Se produjo un error al actualizar el personaje: " + e);
+			throw new ComicException("COD-0002", "Error al actualizar personaje", e);
+		}
 	}
 
 	@Override
-	public void eliminarPersonaje(Long idPersonaje) {
+	public void eliminarPersonaje(Long idPersonaje) throws ComicException{
 		logger.debug("Inicio del metodo 'eliminarPersonaje'");
 		
 		try {	
-			// TODO: Implementar			
+			StringBuilder sbJPQL = new StringBuilder();
+			sbJPQL.append("DELETE FROM Personaje p ");
+			sbJPQL.append("WHERE p.id = :idPersonaje");			
+
+			Query query = em.createQuery(sbJPQL.toString());
+			query.setParameter("idPersonaje", idPersonaje);
+			query.executeUpdate();
+
+			logger.debug("Fin del metodo 'eliminarPersonaje'");
 		} catch (Exception e) {
-			// TODO: handle exception
+			logger.error("Error al eliminar personaje " + e);
+			throw new ComicException("COD-0003", "Error al ejecutar la eliminación del personaje", e);
 		}
 
-		logger.debug("Fin del metodo 'eliminarPersonaje'");
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PersonajeDTO> consultarPersonajes() {
+	public List<PersonajeDTO> consultarPersonajes() throws ComicException {
 		logger.debug("Inicio del metodo 'consultarPersonajes' ");
 
-		// En listpersonajesDTO se almacenarán todos los elementos de listapersonajes
-		// pero en DTO
-		List<PersonajeDTO> listaPersonajesDTO = new ArrayList<>();
-
-		List<Personaje> listaPersonajes = null;
+		List<PersonajeDTO> listaPersonajesDTO = null;
 		
 		try {
-			// Consulta todos los personajes en la Tabla Personaje
-			String qlString = "SELECT p FROM Personaje p";
 
-			// listapersonajes almacena todos los personaje obtenido en la consulta
-			listaPersonajes = em.createQuery(qlString).getResultList();
+			String jpql = "SELECT p FROM Personaje p";
+			Query query = em.createQuery(jpql);
+			List<Personaje> resultados = query.getResultList();			
 
+			listaPersonajesDTO = new ArrayList<PersonajeDTO>();
+			for (Personaje personaje : resultados) {
+				listaPersonajesDTO.add(convertirDTOEntidad(personaje));
+			}
+
+			logger.debug("Fin del metodo 'consultarPersonajes' ");
+			return listaPersonajesDTO;
+			
+		} catch (Exception e) {
+			logger.error("Error al eliminar comic " + e);
+			throw new ComicException("COD-0004", "Error al obtener la lista de Comics: ", e);
+		}
+		
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PersonajeDTO> consultarPersonajes(Long idComic) throws ComicException {
+		logger.debug("Inicio del metodo 'consultarPersonajes?idComic' ");
+		
+		try {
+			StringBuilder sbJPQL = new StringBuilder();
+			sbJPQL.append("SELECT p FROM Personaje p ");
+			sbJPQL.append("WHERE p.comic.id = :idComic");			
+
+			Query query = em.createQuery(sbJPQL.toString());
+			query.setParameter("idComic",idComic);
+			List<Personaje> listaPersonajes = query.getResultList();
+			
+			List<PersonajeDTO> listaPersonajesDTO = new ArrayList<>();
 			for (Personaje personaje : listaPersonajes) {
 				listaPersonajesDTO.add(convertirDTOEntidad(personaje));
 			}
+			
+			logger.debug("Fin del metodo 'consultarPersonajes?idComic' ");
+			return listaPersonajesDTO;
+
 		} catch (Exception e) {
-			// TODO: handle exception			
+			logger.error("Error al consultar personajes: " + e);
+			throw new ComicException("COD-0004", "Error al consultar el personajes", e);
 		}
-		
-		logger.debug("Fin del metodo 'consultarPersonajes' ");
-		return listaPersonajesDTO;
 	}
+	
+	/**
+	 * JOIN: Es una consulta que combina resultados de distintas entidades INNER
+	 * JOIN: Devuelve todas las entidades del lado izquierdo que tienen una relacion
+	 * con la entidad del lado derecho de la relación
+	 * 
+	 * Se define de forma explicita así: 
+	 * [SELECT EntidadA ea JOIN ea.EntidadB EB]
+	 * 
+	 * Su traducción a SQL será: 
+	 * [SELECT EA.* FROM EntidadA EA, EntidadB EB WHERE EA.id = EB.id]
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ConsultarTotalPersonajesPorComicDTO> ConsultarTotalPersonajesPorComicDTO()
+			throws ComicException {
+		
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT new com.hbt.semillero.dto.ConsultarTotalPersonajesPorComicDTO(COUNT(p.id), c.nombre) ");
+			sb.append("FROM Personaje p ");
+			sb.append("JOIN p.comic c ");
+			sb.append("GROUP BY c.nombre");	
+			
+			return em.createQuery(sb.toString()).getResultList();
+		} catch (Exception e) {
+			throw new ComicException("COD-0013", "Error en la consulta de los totales: ", e);
+		}
+	}
+	
+	
+	/*************************************************************************************************/
+	/* METODOS PARA COMPLEMENTAR LAS OPERACIONES DEL CRUD */
+	/*************************************************************************************************/
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -158,60 +240,6 @@ public class GestionarPersonajeBean implements IGestionarPersonajeLocal {
 		return listaPersonajesDTO;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<PersonajeDTO> consultarPersonajes(Long idComic) {
-		logger.debug("Inicio del metodo 'consultarPersonajes?idComic' ");
-
-		/**
-		 * SQL para consultar todos los personajes en la Tabla Personaje que pertenezcan
-		 * a un comic específico
-		 */
-		String qlString = "SELECT p FROM Personaje p WHERE p.comic.id = :idComic";
-
-		// listapersonajes almacena todos los personaje obtenido en la consulta
-		List<Personaje> listaPersonajes = em.createQuery(qlString).setParameter("idComic", idComic).getResultList();
-
-		// En listpersonajesDTO se almacenarán todos los elementos de listapersonajes
-		// pero en DTO
-		List<PersonajeDTO> listaPersonajesDTO = new ArrayList<>();
-
-		for (Personaje personaje : listaPersonajes) {
-			listaPersonajesDTO.add(convertirDTOEntidad(personaje));
-		}
-
-		logger.debug("Fin del metodo 'consultarPersonajes?idComic' ");
-		return listaPersonajesDTO;
-	}
-	
-	/**
-	 * JOIN: Es una consulta que combina resultados de distintas entidades
-	 * INNER JOIN: Devuelve todas las entidades del lado izquierdo que tienen una
-	 * relacion con la entidad del lado derecho de la relación
-	 * 
-	 * Se define de forma explicita así:
-	 * [SELECT EntidadA ea JOIN ea.EntidadB EB]
-	 * 
-	 *  Su traducción a SQL será:
-	 *  [SELECT EA.* FROM EntidadA EA, EntidadB EB WHERE EA.id = EB.id]
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<ConsultarTotalPersonajesPorComicDTO> ConsultarTotalPersonajesPorComicDTO()
-			throws ComicException {
-		
-		try {
-			StringBuilder sb = new StringBuilder();
-			sb.append("SELECT new com.hbt.semillero.dto.ConsultarTotalPersonajesPorComicDTO(COUNT(p.id), c.nombre) ");
-			sb.append("FROM Personaje p ");
-			sb.append("JOIN p.comic c ");
-			sb.append("GROUP BY c.nombre");	
-			
-			return em.createQuery(sb.toString()).getResultList();
-		} catch (Exception e) {
-			throw new ComicException("COD-0013", "Error en la consulta de los totales: ", e);
-		}
-	}
 	
 	
 	/**

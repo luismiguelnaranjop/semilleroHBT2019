@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import com.hbt.semillero.dto.ConsultarTotalPersonajesPorComicDTO;
 import com.hbt.semillero.dto.PersonajeDTO;
 import com.hbt.semillero.dto.ResultadoDTO;
-import com.hbt.semillero.ejb.GestionarComicBean;
 import com.hbt.semillero.ejb.IGestionarPersonajeLocal;
 import com.hbt.semillero.exceptions.ComicException;
 
@@ -109,6 +108,39 @@ public class GestionarPersonajeRest {
 		}
 	}
 	
+	
+	/**
+	 * Metodo encargado de eliminar un comic dado el id, siempre y cuando éste no
+	 * tenga
+	 * http://localhost:8085/semillero-servicios/rest/GestionarPersonaje/eliminarPersonaje?idPersonaje=46
+	 * 
+	 * @param idComic identificador del comic
+	 */
+	@POST
+	@Path("/eliminarPersonaje")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response eliminarPersonaje(@QueryParam("idPersonaje") Long idPersonaje) {
+
+		try {
+			
+			ResultadoDTO resultadoDTO = null;
+			if (idPersonaje != null) {
+				gestionarPersonajeEJB.eliminarPersonaje(idPersonaje);;
+				resultadoDTO = new ResultadoDTO(Boolean.TRUE, "Personaje eliminado exitosamente");
+			} else {
+				resultadoDTO = new ResultadoDTO(Boolean.FALSE, "No se pudo eliminar el personaje");
+			}
+
+			return Response.status(Response.Status.OK).entity(resultadoDTO).build();
+
+		} catch (ComicException e) {
+
+			logger.debug("Se capturó la excepción. y la información es: Codigo " + e.getCodigo() + " - Mensaje: "
+					+ e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity("No se pudo eliminar el Personaje").build();
+		}
+	}
+	
 
 	/**
 	 * 
@@ -120,16 +152,17 @@ public class GestionarPersonajeRest {
 	@GET
 	@Path("/consultarPersonajes")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PersonajeDTO> consultarPersonajes() {
+	public Response consultarPersonajes() {
 
-		List<PersonajeDTO> listPersonajeDTO = null;
 		try {
-			listPersonajeDTO =  gestionarPersonajeEJB.consultarPersonajes();
-		} catch (Exception e) {
-			logger.error("Se ha producido un error al consultar personajes: "+e.getMessage());
+			List<PersonajeDTO> listPersonajeDTO = gestionarPersonajeEJB.consultarPersonajes();
+			return Response.status(Response.Status.OK).entity(listPersonajeDTO).build();
+		} catch (ComicException e) {
+			logger.error("Se ha producido un error al consultar personajes: " + e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity("No se pudo obtener la lista de personajes")
+					.build();
 		}
 
-		return listPersonajeDTO;
 	}
 
 	/**
@@ -143,18 +176,23 @@ public class GestionarPersonajeRest {
 	@GET
 	@Path("/consultarPersonajesPorId")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PersonajeDTO> consultarPersonajes(@QueryParam("idComic") Long idComic){
-		
+	public Response consultarPersonajes(@QueryParam("idComic") Long idComic) {
+
 		List<PersonajeDTO> listPersonajeDTO = null;
+
 		try {
+
 			if (idComic != null) {
 				listPersonajeDTO = gestionarPersonajeEJB.consultarPersonajes(idComic);
 			}
-		} catch (Exception e) {
-			logger.error("Se ha producido un error al consultar personajes: "+e.getMessage());
+
+			return Response.status(Response.Status.OK).entity(listPersonajeDTO).build();
+		} catch (ComicException e) {
+			logger.error("Se ha producido un error al consultar personajes: " + e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity("No se pudieron obtener los personajes de comic")
+					.build();
 		}
-		return listPersonajeDTO;
-		
+
 	}
 	
 	/**

@@ -23,38 +23,40 @@ public interface IGestionarPersonajeLocal {
 	/**
 	 * @description Metodo encargado de crear un personaje y persistirlo
 	 * @param personajeDTO informacion nueva a crear
-	 * @return 
+	 * @return personajeDTO insertado
 	 */
 	public PersonajeDTO crearPersonaje(PersonajeDTO personajeDTO);
 
 	/**
-	 * @description Metodo encargado de consultar un personaje, modificarlo y
-	 *              guardarlo
-	 * @param personajeDTO informacion nueva a modificar
-	 * @return 
-	 * @throws ComicException 
+	 * @description Metodo encargado de modificar un personaje
+	 * @param personajeDTO
+	 * @return personajeDTO de personaje modificado
+	 * @throws ComicException
 	 */
 	public PersonajeDTO modificarPersonaje(PersonajeDTO personajeDTO) throws ComicException;
 
 	/**
 	 * @description Metodo encargado de eliminar un personaje
 	 * @param idPersonaje informacion a eliminar
+	 * @throws ComicException 
 	 */
-	public void eliminarPersonaje(Long idPersonaje);
+	public void eliminarPersonaje(Long idPersonaje) throws ComicException;
 
 	/**
 	 * @description Metodo encargado de retornar una lista de personajes
 	 * @return List<PersonajeDTO> Lista de personajes
+	 * @throws ComicException 
 	 */
-	public List<PersonajeDTO> consultarPersonajes();
+	public List<PersonajeDTO> consultarPersonajes() throws ComicException;
 
 	/**
 	 * @description Metodo encargado de retornar una lista de personajes que
 	 *              pertenecen a un comic determinado
 	 * 
 	 * @return List<PersonajeDTO> Lista de personajes
+	 * @throws ComicException 
 	 */
-	public List<PersonajeDTO> consultarPersonajes(Long idComic);
+	public List<PersonajeDTO> consultarPersonajes(Long idComic) throws ComicException;
 
 	/**
 	 * @description Metodo para hacer pruebas de excepciones

@@ -27,21 +27,22 @@ public interface IGestionarComicLocal {
 	 * @throws ComicException
 	 * 
 	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
+	 * @return 
 	 */
-	public void crearComic(ComicDTO nuevoComicDTO) throws ComicException;
+	public ComicDTO crearComic(ComicDTO nuevoComicDTO) throws ComicException;
 
 
 	/**
 	 * 
 	 * Metodo encargado de consultar un comic por ID y actualizar su nombre
 	 *  
-	 * @param id
 	 * @param comicDTO
 	 * @throws ComicException
 	 * 
 	 * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
+	 * @return 
 	 */
-	public void modificarComic(Long id, String nombre, ComicDTO comicDTO) throws ComicException;
+	public ComicDTO modificarComic(ComicDTO comicDTO) throws ComicException;
 
 	/**
 	 * Metodo encargado de eliminar un comic modificarlo y guardarlo
