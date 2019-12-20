@@ -21,14 +21,13 @@ import { ToastrModule } from 'ngx-toastr';
 import { NombreComponent } from './semillero/componentes/imprimirNombre/imprimir-nombre-component';
 import { ImprimirListaComponent } from './semillero/componentes/imprimirLista/imprimir-lista-component';
 import { ConsultarComicComponent } from './semillero/componentes/consultarComic/consultar-comic';
+import { GestionarPersonaComponent } from './semillero/componentes/gestionarPersona/gestionar-persona';
 
 // DTOs
 export { ComicDTO } from './semillero/dto/comic.dto';
 export { ResultadoDTO } from './semillero/dto/resultado.dto';
 
 //Manejo de servicios
-
-import {EjemploService} from './semillero/services/ejemplo.service';
 import {AbstractService} from './semillero/services/template.service';
 
 @NgModule({
@@ -40,7 +39,8 @@ import {AbstractService} from './semillero/services/template.service';
     GestionarComicComponent,
     NombreComponent,
     ImprimirListaComponent,
-    ConsultarComicComponent
+    ConsultarComicComponent,
+    GestionarPersonaComponent
   ],
   imports: [
     BrowserModule,

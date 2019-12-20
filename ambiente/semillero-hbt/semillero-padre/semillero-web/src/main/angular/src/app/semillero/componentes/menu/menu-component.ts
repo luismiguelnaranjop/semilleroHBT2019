@@ -36,6 +36,14 @@ export class MenuComponent implements OnInit {
     this.router.navigate(['gestionar-comic']);
   }
 
+    /**
+   * @description Metodo encargado de direccionar al componente de gestionar persona
+   * @author Luis Miguel Naranjo Pastrana <luismiguelnaranjop@gmail.com>
+   */
+  public navegarGestionarPersona(): void {
+    this.router.navigate(['gestionar-persona']);
+  }
+
   /**
    * @description Metodo encargado de direccionar al componente de gestionar comic
    * @author Diego Fernando Alvarez Silva <dalvarez@heinsohn.com.co>

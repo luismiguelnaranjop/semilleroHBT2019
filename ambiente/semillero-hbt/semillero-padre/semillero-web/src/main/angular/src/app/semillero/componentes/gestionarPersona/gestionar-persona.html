@@ -1,0 +1,93 @@
+<div class="container">
+    <form [formGroup]="gestionarPersonaForm">
+        <h1>Gestionar Personas</h1>
+        <hr>
+
+
+        <div class="row">
+            <div class="col-6">
+                <label for="nombreComic">Nombre:</label>
+                <input type="text" class="form-control" id="nombreComic" formControlName="nombre"
+                    [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" maxlength="50">
+                <div *ngIf="submitted && f.nombre.errors">
+                    <span class="text-danger" *ngIf="f.nombre.errors.required">Campo requerido.</span>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <label for="fecha_nac">Fecha de nacimiento</label>
+                <input type="date" class="form-control" id="fecha_nac" formControlName="fecha_nac">
+                <div *ngIf="submitted && f.fecha_nac.errors">
+                    <span class="text-danger" *ngIf="f.nombre.errors.required">Campo requerido.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="tematica">Tipo de documento:</label>
+                    <select class="form-control" id="tematica" formControlName="tipo_doc">
+                        <option value="AS">Adulto sin identificación</option>
+                        <option value="CC">Cedula de ciudadanía</option>
+                        <option value="CE">Cedula de extrangería</option>
+                        <option value="MS">Menor sin identificación</option>
+                        <option value="PA">Pasaporte</option>
+                        <option value="RC">Registro civil</option>
+                        <option value="TI">Targeta de identidad</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="numero_doc">Numero de documento</label>
+                <input type="text" class="form-control" id="numero_doc" formControlName="numero_doc">
+                <div *ngIf="submitted && f.numero_doc.errors">
+                    <span class="text-danger" *ngIf="f.nombre.errors.required">Campo requerido.</span>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div class="row">
+            <div class="col-6">
+                <span></span>
+            </div>
+            <div class="col-6 text-right">
+                <button type="button" class="btn btn-primary" *ngIf="showCreateBtn" (click)="CreatePersona()">Registrar persona</button>
+                <button type="button" class="btn btn-warning" *ngIf="showUpdateBtn" (click)="UpdatePersona()">Guardar cambio</button>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row" [hidden]="listaPersonas.length === 0">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Tipo de documento</th>
+                            <th scope="col">Numero de documento</th>
+                            <th scope="col">Fecha de nacimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let persona of listaPersonas">
+                            <th scope="row">{{persona.id}}</th>
+                            <td>{{persona.nombre | uppercase }}</td>
+                            <td>{{persona.tipo_doc | uppercase }}</td>
+                            <td>{{persona.numero_doc}}</td>
+                            <td>{{persona.fecha_nac | date:"MM/dd/yy" }}</td>
+                            <td>
+                                <i class="fas fa-search 2x ml-1" (click)="ReadComic(comic)" title="Consultar"></i>
+                                <i class="fas fa-pencil-alt 2x ml-1" (click)="EditComic(i)" title="Editar"></i>
+                                <i class="far fa-times-circle 2x ml-1" (click)="DeleteComic(i)" title="Eliminar"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
