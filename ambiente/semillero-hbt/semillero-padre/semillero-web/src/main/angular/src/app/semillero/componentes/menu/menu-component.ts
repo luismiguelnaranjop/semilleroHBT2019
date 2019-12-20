@@ -52,7 +52,10 @@ export class MenuComponent implements OnInit {
     this.router.navigate(['bienvenida']);
   }
 
+  /**
+   * Se agrega una nueva ruta para navegar desde el menu
+   */
   public navegarGestionarCompra(): void {
-    //WIP
+    this.router.navigate(['gestionar-compras']);
   }
 }

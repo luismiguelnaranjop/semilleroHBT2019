@@ -22,6 +22,7 @@ import { NombreComponent } from './semillero/componentes/imprimirNombre/imprimir
 import { ImprimirListaComponent } from './semillero/componentes/imprimirLista/imprimir-lista-component';
 import { ConsultarComicComponent } from './semillero/componentes/consultarComic/consultar-comic';
 import { GestionarPersonaComponent } from './semillero/componentes/gestionarPersona/gestionar-persona';
+import { GestionarCompraComponent } from './semillero/componentes/gestionarCompra/gestionar-compra';
 
 // DTOs
 export { ComicDTO } from './semillero/dto/comic.dto';
@@ -40,7 +41,8 @@ import {AbstractService} from './semillero/services/template.service';
     NombreComponent,
     ImprimirListaComponent,
     ConsultarComicComponent,
-    GestionarPersonaComponent
+    GestionarPersonaComponent,
+    GestionarCompraComponent
   ],
   imports: [
     BrowserModule,
@@ -58,5 +60,5 @@ import {AbstractService} from './semillero/services/template.service';
   bootstrap: [AppComponent]
 })
 export class AppModule { 
-
+  
 }
